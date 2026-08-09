@@ -1,0 +1,27 @@
+# Configuração Nixpacks para Railway
+[phases.setup]
+nixPkgs = [
+    "nodejs_20",
+    "npm",
+    "cairo",
+    "pango", 
+    "libjpeg",
+    "giflib",
+    "librsvg",
+    "python3",
+    "gcc",
+    "gnumake"
+]
+
+[phases.install]
+cmds = [
+    "npm install --only=production"
+]
+
+[phases.build]
+cmds = [
+    "echo 'Build phase completed'"
+]
+
+[start]
+cmd = "npm start"

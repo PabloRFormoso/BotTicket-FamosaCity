@@ -1,0 +1,25 @@
+2026-07-14 00:36:29 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosaticket.cpi6o4x.mongodb.net
+2026-07-14 00:36:57 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosaticket.cpi6o4x.mongodb.net
+2026-07-14 00:37:02 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosaticket.cpi6o4x.mongodb.net
+2026-07-14 00:50:56 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosaticket.cpi6o4x.mongodb.net
+2026-07-14 00:57:32 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosacity-ticket.pqbveza.mongodb.net
+2026-07-14 00:57:50 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosacity-ticket.pqbveza.mongodb.net
+2026-07-14 00:59:02 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosacity-ticket.pqbveza.mongodb.net
+2026-07-14 00:59:23 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosacity-ticket.pqbveza.mongodb.net
+2026-07-14 01:01:59 [error]: Erro ao iniciar o bot: querySrv ECONNREFUSED _mongodb._tcp.famosacity-ticket.pqbveza.mongodb.net
+2026-07-14 01:02:21 [error]: Erro ao iniciar o bot: Cannot find module '../commands/models/Ticket'
+Require stack:
+- E:\BotDiscordFamosaCity\Ticket\TicketBNX\events\messageCreate.js
+- E:\BotDiscordFamosaCity\Ticket\TicketBNX\main.js
+2026-07-14 01:04:05 [error]: Erro ao iniciar o bot: Cannot find module '../../functions/uploadManager'
+Require stack:
+- E:\BotDiscordFamosaCity\Ticket\TicketBNX\commands\ticket.js
+- E:\BotDiscordFamosaCity\Ticket\TicketBNX\main.js
+2026-07-14 01:35:20 [error]: Uncaught Exception: Unknown interaction
+2026-07-14 02:50:42 [error]: Erro ao iniciar o bot: Cannot find module 'canvas'
+Require stack:
+- E:\BotDiscordFamosaCity\Ticket\TicketBNX\events\guildMemberAdd.js
+- E:\BotDiscordFamosaCity\Ticket\TicketBNX\main.js
+2026-07-14 02:52:05 [error]: Uncaught Exception: No such file or directory
+2026-07-14 02:53:19 [error]: Uncaught Exception: No such file or directory
+2026-07-14 02:55:22 [error]: Uncaught Exception: No such file or directory

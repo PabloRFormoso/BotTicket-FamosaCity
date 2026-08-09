@@ -1,0 +1,11 @@
+# Arquivos e pastas ignorados no deploy Railway
+*.md
+.env
+.git/
+.gitignore
+node_modules/
+*.log
+error.log
+.vscode/
+.DS_Store
+Thumbs.db
