@@ -8,7 +8,11 @@ const {
     ButtonStyle,
     ModalBuilder,
     TextInputStyle,
-    TextInputBuilder
+    TextInputBuilder,
+    ContainerBuilder,
+    TextDisplayBuilder,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder
 } = require("discord.js");
 const Ticket = require('../models/Ticket');
 const discordTranscripts = require('discord-html-transcripts'); // Biblioteca para transcrição de canais
@@ -26,24 +30,70 @@ module.exports = (client) => {
                 const menu = new StringSelectMenuBuilder()
                     .setCustomId('ticket')
                     .setPlaceholder('Selecione um motivo')
+                    .setDisabled(true)
                     .addOptions([
-                        { label: 'Suporte', value: 'suporte' },
-                        { label: 'Denuncia', value: 'denuncia' },
-                        { label: 'Bug', value: 'bug' },
-                        { label: 'Donate', value: 'donate' },
+                        {
+                            label: 'Suporte',
+                            value: 'suporte',
+                            emoji: '<:abreticket:1536559368399491182>'
+                        },
+                        {
+                            label: 'Denuncia',
+                            value: 'denuncia',
+                            emoji: '<:regras:1536560290920009819>'
+                        },
+                        {
+                            label: 'Bug',
+                            value: 'bug',
+                            emoji: '<:bugfix:1536560205888757810>'
+                        },
+                        {
+                            label: 'Donate',
+                            value: 'donate',
+                            emoji: '<a:dinheiro:1536560781272027236>'
+                        },
                     ]);
 
                 const row = new ActionRowBuilder().addComponents(menu);
 
-                const embed = new EmbedBuilder()
-                    .setTitle('Ticket')
-                    .setDescription('Selecione um motivo para abrir um ticket.')
-                    // image e a logo do servidor
-                    .setImage(interaction.guild.iconURL({ size: 1024, dynamic: true }))
-                    .setColor('#ffff00');
+                const ticketText = new TextDisplayBuilder()
+                    .setContent(
+                        '# 🎫 Central de Atendimento\n\n' +
+                        '## <:abreticket:1536559368399491182> Sistema de Tickets\n\n' +
+                        '<a:seta:1536561676453679104> Precisa de ajuda ou deseja falar com nossa equipe? Selecione abaixo o **motivo do seu atendimento** para abrir um ticket.\n\n' +
+                        '<a:seta:1536561676453679104> Escolha a categoria correta para que sua solicitação seja encaminhada à equipe responsável.\n\n' +
+                        '### Como funciona?\n\n' +
+                        '<a:seta:1536561676453679104> Selecione o motivo do atendimento no menu abaixo.\n' +
+                        '<a:seta:1536561676453679104> Um canal privado será criado automaticamente.\n' +
+                        '<a:seta:1536561676453679104> Explique sua situação com o máximo de detalhes possível.\n' +
+                        '<a:seta:1536561676453679104> Aguarde até que um membro da equipe realize o atendimento.\n\n' +
+                        '### Importante\n\n' +
+                        '<a:caution:1533930637642305546> Evite abrir **tickets duplicados** ou selecionar categorias que não correspondam ao seu problema.\n\n' +
+                        '<a:caution:1533930637642305546> Utilizar o sistema de forma indevida poderá resultar no fechamento do ticket sem atendimento.'
+                    );
 
-                await interaction.reply({ content: 'Mensagem enviada no canal.', flags: MessageFlags.Ephemeral });
-                await interaction.channel.send({ embeds: [embed], components: [row] });
+                const ticketImage = new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL('https://i.imgur.com/oUUkzMC.gif')
+                            .setDescription('A Famosa City • Central de Atendimento')
+                    );
+
+                const ticketContainer = new ContainerBuilder()
+                    .setAccentColor(0xffffff)
+                    .addTextDisplayComponents(ticketText)
+                    .addActionRowComponents(row)
+                    .addMediaGalleryComponents(ticketImage);
+
+                await interaction.reply({
+                    content: 'Mensagem enviada no canal.',
+                    flags: MessageFlags.Ephemeral
+                });
+
+                await interaction.channel.send({
+                    components: [ticketContainer],
+                    flags: MessageFlags.IsComponentsV2
+                });
             }
         } else if (interaction.isStringSelectMenu()) {
             if (interaction.customId === 'ticket') {
@@ -196,23 +246,66 @@ module.exports = (client) => {
                 const resetMenu = new StringSelectMenuBuilder()
                     .setCustomId('ticket')
                     .setPlaceholder('Selecione um motivo')
+                    .setDisabled(true)
                     .addOptions([
-                        { label: 'Suporte', value: 'suporte' },
-                        { label: 'Denuncia', value: 'denuncia' },
-                        { label: 'Bug', value: 'bug' },
-                        { label: 'Donate', value: 'donate' },
+                        {
+                            label: 'Suporte',
+                            value: 'suporte',
+                            emoji: '<:abreticket:1536559368399491182>'
+                        },
+                        {
+                            label: 'Denuncia',
+                            value: 'denuncia',
+                            emoji: '<:regras:1536560290920009819>'
+                        },
+                        {
+                            label: 'Bug',
+                            value: 'bug',
+                            emoji: '<:bugfix:1536560205888757810>'
+                        },
+                        {
+                            label: 'Donate',
+                            value: 'donate',
+                            emoji: '<a:dinheiro:1536560781272027236>'
+                        },
                     ]);
 
                 const resetRow = new ActionRowBuilder().addComponents(resetMenu);
 
-                const resetEmbed = new EmbedBuilder()
-                    .setTitle('Ticket')
-                    .setDescription('Selecione um motivo para abrir um ticket.')
-                    .setImage(interaction.guild.iconURL({ size: 1024, dynamic: true }))
-                    .setColor('#ffff00');
+                const resetText = new TextDisplayBuilder()
+                    .setContent(
+                        '# 🎫 Central de Atendimento\n\n' +
+                        '## <:abreticket:1536559368399491182> Sistema de Tickets\n\n' +
+                        '<a:seta:1536561676453679104> Precisa de ajuda ou deseja falar com nossa equipe? Selecione abaixo o **motivo do seu atendimento** para abrir um ticket.\n\n' +
+                        '<a:seta:1536561676453679104> Escolha a categoria correta para que sua solicitação seja encaminhada à equipe responsável.\n\n' +
+                        '### Como funciona?\n\n' +
+                        '<a:seta:1536561676453679104> Selecione o motivo do atendimento no menu abaixo.\n' +
+                        '<a:seta:1536561676453679104> Um canal privado será criado automaticamente.\n' +
+                        '<a:seta:1536561676453679104> Explique sua situação com o máximo de detalhes possível.\n' +
+                        '<a:seta:1536561676453679104> Aguarde até que um membro da equipe realize o atendimento.\n\n' +
+                        '### Importante\n\n' +
+                        '<a:caution:1533930637642305546> Evite abrir **tickets duplicados** ou selecionar categorias que não correspondam ao seu problema.\n\n' +
+                        '<a:caution:1533930637642305546> Utilizar o sistema de forma indevida poderá resultar no fechamento do ticket sem atendimento.'
+                    );
 
-                // Atualiza a mensagem original para resetar o menu
-                await interaction.message.edit({ embeds: [resetEmbed], components: [resetRow] });
+                const resetImage = new MediaGalleryBuilder()
+                    .addItems(
+                        new MediaGalleryItemBuilder()
+                            .setURL('https://i.imgur.com/2g6MKVg.gif')
+                            .setDescription('Famosa City • Central de Atendimento')
+                    );
+
+                const resetContainer = new ContainerBuilder()
+                    .setAccentColor(0xffffff)
+                    .addTextDisplayComponents(resetText)
+                    .addActionRowComponents(resetRow)
+                    .addMediaGalleryComponents(resetImage);
+
+                await interaction.message.edit({
+                    embeds: [],
+                    components: [resetContainer],
+                    flags: MessageFlags.IsComponentsV2
+                });
 
                 } catch (error) {
                     console.error(`❌ Erro ao criar ticket para ${interaction.user.tag}:`, error);
