@@ -123,14 +123,12 @@ body::after {
     top: 0;
     left: 0;
     right: 0;
-    height: 160px;
+    height: 130px;
     z-index: 9998;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 26px 54px 24px 64px;
-    background: linear-gradient(180deg, rgba(2,10,16,.98), rgba(2,10,16,.88) 75%, rgba(2,10,16,0));
-    backdrop-filter: blur(10px);
 }
 .fc-brand {
     display: flex;
