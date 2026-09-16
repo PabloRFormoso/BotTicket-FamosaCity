@@ -46,6 +46,8 @@ module.exports = (client) => {
                         { label: 'Denuncia', value: 'denuncia', emoji: '<:regras:1536560290920009819>' },
                         { label: 'Bug', value: 'bug', emoji: '<:bugfix:1536560205888757810>' },
                         { label: 'Donate', value: 'donate', emoji: '<a:dinheiro:1536560781272027236>' },
+                        { label: 'Revogação', value: 'revogacao', emoji: '🔒' },
+                        { label: 'Organizações', value: 'organizacoes', emoji: '🏢' },
                     ]);
 
                 const row = new ActionRowBuilder().addComponents(menu);
@@ -89,9 +91,8 @@ module.exports = (client) => {
                     flags: MessageFlags.IsComponentsV2
                 });
             }
-        } else if (interaction.isStringSelectMenu()) {
-            if (interaction.customId === 'ticket') {
-                try {
+        } else if (interaction.isStringSelectMenu() && interaction.customId === 'ticket') {
+            try {
                     const selectedValue = interaction.values[0];
                     const guild = interaction.guild;
                     
@@ -124,12 +125,26 @@ module.exports = (client) => {
                         channelName = `💰・ticket-${interaction.user.tag}`;
                         categoryId = process.env.DONATE; // ID da categoria no .env
                         break;
+                    case 'revogacao':
+                        channelName = `🔒・ticket-${interaction.user.tag}`;
+                        categoryId = process.env.REVOGACAO;
+                        break;
+                    case 'organizacoes':
+                        channelName = `🏢・ticket-${interaction.user.tag}`;
+                        categoryId = process.env.ORGANIZACOES;
+                        break;
                     default:
                         return;
                 }
 
                 // Verifica se a categoria já existe pelo ID
-                let category = guild.channels.cache.get(categoryId);
+                let category = categoryId ? guild.channels.cache.get(categoryId) : null;
+                if (!category) {
+                    category = guild.channels.cache.find(ch =>
+                        ch.type === ChannelType.GuildCategory &&
+                        ch.name.toLowerCase() === `categoria-${selectedValue}`.toLowerCase()
+                    );
+                }
                 //console.log(`🔍 Procurando categoria com ID: ${categoryId}`);
                 //console.log(`📂 Categoria encontrada:`, category ? category.name : 'Não encontrada');
 
@@ -195,7 +210,7 @@ module.exports = (client) => {
                 )
                 .setColor('#5865F2')
                 .setFooter({
-                    text: 'Famosa City • Suporte Oficial',
+                    text: 'A Famosa City • Suporte Oficial',
                     iconURL: interaction.guild.iconURL({ dynamic: true })
                 })
                 .setTimestamp();
@@ -216,9 +231,14 @@ module.exports = (client) => {
                     .setCustomId('remover-ticket')
                     .setLabel('Remover Membro')
                     .setStyle(ButtonStyle.Secondary);
+                const transferir = new ButtonBuilder()
+                    .setCustomId('transferir-ticket')
+                    .setLabel('Transferir Ticket')
+                    .setEmoji('🔄')
+                    .setStyle(ButtonStyle.Secondary);
 
                 const row = new ActionRowBuilder()
-                    .addComponents(sair, fechar, adicionar, remover);
+                    .addComponents(sair, fechar, adicionar, remover, transferir);
 
                 await channel.send({ content: ` ${interaction.user}` });
                 await channel.send({ embeds: [embed], components: [row] });
@@ -245,6 +265,8 @@ module.exports = (client) => {
                         { label: 'Denuncia', value: 'denuncia', emoji: '<:regras:1536560290920009819>' },
                         { label: 'Bug', value: 'bug', emoji: '<:bugfix:1536560205888757810>' },
                         { label: 'Donate', value: 'donate', emoji: '<a:dinheiro:1536560781272027236>' },
+                        { label: 'Revogação', value: 'revogacao', emoji: '🔒' },
+                        { label: 'Organizações', value: 'organizacoes', emoji: '🏢' },
                     ]);
 
                 const resetRow = new ActionRowBuilder().addComponents(resetMenu);
@@ -269,7 +291,7 @@ module.exports = (client) => {
                     .addItems(
                         new MediaGalleryItemBuilder()
                             .setURL('https://i.imgur.com/2g6MKVg.gif')
-                            .setDescription('Famosa City • Central de Atendimento')
+                            .setDescription('A Famosa City • Central de Atendimento')
                     );
 
                 const resetContainer = new ContainerBuilder()
@@ -284,14 +306,139 @@ module.exports = (client) => {
                     flags: MessageFlags.IsComponentsV2
                 });
 
-                } catch (error) {
-                    console.error(`❌ Erro ao criar ticket para ${interaction.user.tag}:`, error);
-                    return interaction.reply({
-                        content: 'Ocorreu um erro ao criar o ticket. Tente novamente mais tarde.',
-                        flags: MessageFlags.Ephemeral
-                    });
-                }
+            } catch (error) {
+                console.error(`❌ Erro ao criar ticket para ${interaction.user.tag}:`, error);
+                return interaction.reply({
+                    content: 'Ocorreu um erro ao criar o ticket. Tente novamente mais tarde.',
+                    flags: MessageFlags.Ephemeral
+                });
             }
+        } else if (interaction.isButton() && interaction.customId === 'transferir-ticket') {
+            const teamRoleId = process.env.TEAM_ROLE_ID;
+            if (!interaction.member.roles.cache.has(teamRoleId)) {
+                return interaction.reply({
+                    content: 'Apenas membros autorizados podem transferir este ticket.',
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            const ticket = await Ticket.findOne({ channelId: interaction.channel.id });
+            if (!ticket) {
+                return interaction.reply({
+                    content: 'Este canal não está associado a um ticket.',
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            const transferMenu = new StringSelectMenuBuilder()
+                .setCustomId('transferir-ticket-categoria')
+                .setPlaceholder('Selecione a nova categoria')
+                .addOptions([
+                    { label: 'Suporte', value: 'suporte', emoji: '❓' },
+                    { label: 'Denúncia', value: 'denuncia', emoji: '⚠️' },
+                    { label: 'Bug', value: 'bug', emoji: '🐛' },
+                    { label: 'Donate', value: 'donate', emoji: '💰' },
+                    { label: 'Revogação', value: 'revogacao', emoji: '🔒' },
+                    { label: 'Organizações', value: 'organizacoes', emoji: '🏢' },
+                ]);
+
+            return interaction.reply({
+                content: '🔄 Selecione a categoria para onde este ticket será transferido:',
+                components: [new ActionRowBuilder().addComponents(transferMenu)],
+                flags: MessageFlags.Ephemeral
+            });
+
+        } else if (interaction.isStringSelectMenu() && interaction.customId === 'transferir-ticket-categoria') {
+            const teamRoleId = process.env.TEAM_ROLE_ID;
+            if (!interaction.member.roles.cache.has(teamRoleId)) {
+                return interaction.reply({
+                    content: 'Apenas membros autorizados podem transferir este ticket.',
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            const ticket = await Ticket.findOne({ channelId: interaction.channel.id });
+            if (!ticket) {
+                return interaction.reply({
+                    content: 'Este canal não está associado a um ticket.',
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            const destination = interaction.values[0];
+            const categories = {
+                suporte: { label: 'Suporte', env: 'ABERTOS', emoji: '❓' },
+                denuncia: { label: 'Denúncia', env: 'DENUNCIA', emoji: '⚠️' },
+                bug: { label: 'Bug', env: 'BUG', emoji: '🐛' },
+                donate: { label: 'Donate', env: 'DONATE', emoji: '💰' },
+                revogacao: { label: 'Revogação', env: 'REVOGACAO', emoji: '🔒' },
+                organizacoes: { label: 'Organizações', env: 'ORGANIZACOES', emoji: '🏢' },
+            };
+
+            const target = categories[destination];
+            if (!target) {
+                return interaction.reply({ content: 'Categoria inválida.', flags: MessageFlags.Ephemeral });
+            }
+
+            if (ticket.reason === destination) {
+                return interaction.reply({
+                    content: `Este ticket já está na categoria **${target.label}**.`,
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            let categoryId = process.env[target.env];
+            let category = categoryId ? interaction.guild.channels.cache.get(categoryId) : null;
+            if (!category) {
+                category = interaction.guild.channels.cache.find(ch =>
+                    ch.type === ChannelType.GuildCategory &&
+                    ch.name.toLowerCase() === `categoria-${destination}`.toLowerCase()
+                );
+            }
+
+            if (!category) {
+                category = await interaction.guild.channels.create({
+                    name: `Categoria-${destination}`,
+                    type: ChannelType.GuildCategory,
+                    reason: `Categoria criada para tickets de ${destination}`
+                });
+            }
+
+            const previous = categories[ticket.reason]?.label || ticket.reason;
+            await interaction.channel.setParent(category.id, { lockPermissions: false });
+
+            const suffix = interaction.channel.name.includes('・')
+                ? interaction.channel.name.split('・').slice(1).join('・')
+                : interaction.channel.name.replace(/^[^a-zA-Z0-9]+/, '');
+            const newName = `${target.emoji}・${suffix}`.slice(0, 100);
+            if (interaction.channel.name !== newName) {
+                await interaction.channel.setName(newName, `Ticket transferido para ${target.label}`);
+            }
+
+            ticket.reason = destination;
+            await ticket.save();
+
+            const transferEmbed = new EmbedBuilder()
+                .setTitle('🔄 Ticket transferido')
+                .setDescription(`**${previous}** → **${target.label}**`)
+                .addFields({ name: 'Transferido por', value: `<@${interaction.user.id}>` })
+                .setColor('#5865F2')
+                .setTimestamp();
+
+            await interaction.channel.send({ embeds: [transferEmbed] });
+
+            const logChannel = process.env.LOG_CHANNEL_ID
+                ? interaction.guild.channels.cache.get(process.env.LOG_CHANNEL_ID)
+                : null;
+            if (logChannel?.isTextBased()) {
+                await logChannel.send({ embeds: [transferEmbed] }).catch(() => null);
+            }
+
+            return interaction.update({
+                content: `✅ Ticket transferido de **${previous}** para **${target.label}**.`,
+                components: []
+            });
+
         } else if (interaction.isButton() && interaction.customId.startsWith('avaliar-ticket:')) {
             const [, ticketId, staffId] = interaction.customId.split(':');
 
@@ -559,13 +706,13 @@ module.exports = (client) => {
                 const ticketUser = await client.users.fetch(ticket.userId);
                 const dmEmbed = new EmbedBuilder()
                     .setTitle('🎟️ Seu ticket foi finalizado')
-                    .setDescription('Seu atendimento na **Famosa City** foi encerrado. Você pode consultar a transcrição e avaliar o atendimento recebido.')
+                    .setDescription('Seu atendimento em **A Famosa City** foi encerrado. Você pode consultar a transcrição e avaliar o atendimento recebido.')
                     .addFields(
                         { name: 'Atendido por', value: `<@${interaction.user.id}>`, inline: true },
                         { name: 'ID do Ticket', value: ticket._id.toString(), inline: true },                        { name: 'Autenticidade', value: verificationUrl ? `[🔐 Abrir Transcript Oficial](${verificationUrl})\nCódigo: \`${verificationCode}\`` : 'Verificação não disponível.', inline: false }
                     )
                     .setColor('#5865F2')
-                    .setFooter({ text: 'Famosa City • Suporte Oficial' })
+                    .setFooter({ text: 'A Famosa City • Suporte Oficial' })
                     .setTimestamp();
 
                 const dmButtons = [];
@@ -675,28 +822,36 @@ module.exports = (client) => {
             await interaction.showModal(modal);
 
             const filter = (i) => i.customId === 'userModal' && i.user.id === interaction.user.id;
-            interaction.channel.awaitMessageComponent({ filter, time: 60000 })
+            interaction.awaitModalSubmit({ filter, time: 60000 })
                 .then(async (modalInteraction) => {
-                    const adcId = modalInteraction.fields.getTextInputValue('adcId');
+                    const adcId = modalInteraction.fields.getTextInputValue('adcId').replace(/\D/g, '');
                     const user = await modalInteraction.guild.members.fetch(adcId).catch(() => null);
 
                     if (!user) {
                         return modalInteraction.reply({
-                            content: 'Usuário não encontrado no servidor.',
+                            content: 'Usuário não encontrado no servidor. Informe o ID do Discord.',
                             flags: MessageFlags.Ephemeral
                         });
                     }
 
-                    await modalInteraction.reply({
-                        content: `Usuário ${user} adicionado ao ticket.`,
-                        flags: MessageFlags.Ephemeral
-                    });
+                    try {
+                        await modalInteraction.channel.permissionOverwrites.edit(user.id, {
+                            ViewChannel: true,
+                            SendMessages: true,
+                            ReadMessageHistory: true,
+                        });
 
-                    modalInteraction.channel.permissionOverwrites.create(user.id, {
-                        ViewChannel: true,
-                        SendMessages: true,
-                        ReadMessageHistory: true,
-                    });
+                        await modalInteraction.reply({
+                            content: `Usuário ${user} adicionado ao ticket.`,
+                            flags: MessageFlags.Ephemeral
+                        });
+                    } catch (error) {
+                        console.error('Erro ao adicionar membro ao ticket:', error);
+                        await modalInteraction.reply({
+                            content: 'Não foi possível adicionar o usuário. Verifique as permissões do bot no canal.',
+                            flags: MessageFlags.Ephemeral
+                        }).catch(() => {});
+                    }
                 })
                 .catch(() => { });
         } else if (interaction.customId === 'remover-ticket') {
@@ -725,24 +880,32 @@ module.exports = (client) => {
             await interaction.showModal(modal);
 
             const filter = (i) => i.customId === 'remModal' && i.user.id === interaction.user.id;
-            interaction.channel.awaitMessageComponent({ filter, time: 60000 })
+            interaction.awaitModalSubmit({ filter, time: 60000 })
                 .then(async (modalInteraction) => {
-                    const remId = modalInteraction.fields.getTextInputValue('remId');
+                    const remId = modalInteraction.fields.getTextInputValue('remId').replace(/\D/g, '');
                     const rem = await modalInteraction.guild.members.fetch(remId).catch(() => null);
 
                     if (!rem) {
                         return modalInteraction.reply({
-                            content: 'Usuário não encontrado no servidor.',
+                            content: 'Usuário não encontrado no servidor. Informe o ID do Discord.',
                             flags: MessageFlags.Ephemeral
                         });
                     }
 
-                    await modalInteraction.reply({
-                        content: `Usuário ${rem} removido do ticket.`,
-                        flags: MessageFlags.Ephemeral
-                    });
+                    try {
+                        await modalInteraction.channel.permissionOverwrites.delete(rem.id);
 
-                    modalInteraction.channel.permissionOverwrites.delete(rem.id);
+                        await modalInteraction.reply({
+                            content: `Usuário ${rem} removido do ticket.`,
+                            flags: MessageFlags.Ephemeral
+                        });
+                    } catch (error) {
+                        console.error('Erro ao remover membro do ticket:', error);
+                        await modalInteraction.reply({
+                            content: 'Não foi possível remover o usuário. Verifique as permissões do bot no canal.',
+                            flags: MessageFlags.Ephemeral
+                        }).catch(() => {});
+                    }
                 })
                 .catch(() => { });
         }

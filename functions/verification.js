@@ -64,7 +64,7 @@ function buildVerificationPage(data) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Famosa City • Transcript Oficial</title>\n<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMjBhMTAiLz48cGF0aCBkPSJNMzIgOCA1NSA1Mkg0M2wtNC04SDI1bC00IDhIOUwzMiA4Wm0wIDIwLTUgMTBoMTBMMzIgMjhaIiBmaWxsPSIjMDBkOWZmIi8+PHBhdGggZD0iTTMyIDggNDMgMjloLTlsLTItNC0yIDRoLTlMMzIgOFoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=">
+<title>A Famosa City • Transcript Oficial</title>\n<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMjBhMTAiLz48cGF0aCBkPSJNMzIgOCA1NSA1Mkg0M2wtNC04SDI1bC00IDhIOUwzMiA4Wm0wIDIwLTUgMTBoMTBMMzIgMjhaIiBmaWxsPSIjMDBkOWZmIi8+PHBhdGggZD0iTTMyIDggNDMgMjloLTlsLTItNC0yIDRoLTlMMzIgOFoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=">
 <style>
 :root{--cyan:#00d9ff;--bg:#02070c;--panel:#06131d;--text:#eef8fb;--muted:#8aa4b5}
 *{box-sizing:border-box} body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;background:
@@ -85,10 +85,10 @@ box-shadow:0 30px 100px rgba(0,0,0,.48);overflow:hidden}
 </head>
 <body>
 <div class="card">
-<div class="head"><div class="brand">FAMOSA <span>CITY</span></div><div class="ok">✓ REGISTRO OFICIAL</div></div>
+<div class="head"><div class="brand">A FAMOSA <span>CITY</span></div><div class="ok">✓ REGISTRO OFICIAL</div></div>
 <div class="body">
 <h1 class="title">Transcript Oficial</h1>
-<div class="sub">Os dados abaixo foram gerados pelo BotTicket no momento do encerramento do atendimento.</div>
+<div class="sub">O conteudo de todas os atendimentos do ticket são armazenados no momento do encerramento do atendimento.</div>
 <div class="grid">
 <div class="item"><span class="label">Código</span><span class="value">${escapeHtml(verificationCode)}</span></div>
 <div class="item"><span class="label">Ticket</span><span class="value">#${escapeHtml(ticketId)}</span></div>
@@ -100,7 +100,7 @@ box-shadow:0 30px 100px rgba(0,0,0,.48);overflow:hidden}
 <span class="label" style="margin-top:18px">SHA-256 do HTML oficial</span>
 <div class="hash">${escapeHtml(transcriptHash)}</div>
 <div class="actions"><a class="btn" href="${escapeHtml(transcriptUrl)}">Abrir transcript oficial</a></div>
-<div class="note">Alterações feitas com DevTools/Inspecionar Elemento afetam apenas a cópia exibida naquele navegador. O arquivo oficial continua armazenado no CDN da Famosa City. Para conferir uma prova ou print, abra esta página pelo código de verificação e compare os dados do atendimento.</div>
+<div class="note">Qualquer alterações feitas afetam apenas a cópia exibida naquele navegador. O arquivo oficial continua armazenado nos arquivos da cidade. Para conferir uma prova ou print, abra esta página pelo código de verificação e compare os dados do atendimento.</div>
 </div>
 </div>
 </body>

@@ -58,7 +58,7 @@ function styleTranscript(input, metadata = {}) {
 
     // Remove o cabeçalho padrão do discord-html-transcripts (nome do servidor/canal)
     // e o rodapé padrão "Exported X messages. Powered by...".
-    // O transcript passa a usar somente o cabeçalho/rodapé personalizados da Famosa City.
+    // O transcript passa a usar somente o cabeçalho/rodapé personalizados da A Famosa City.
     html = html
         .replace(/<discord-header\b[^>]*>[\s\S]*?<\/discord-header>/gi, '')
         .replace(/<[^>]+>\s*Exported\s+\d+\s+messages?[\s\S]*?Powered by[\s\S]*?<\/[^>]+>/gi, '')
@@ -371,7 +371,7 @@ a { color: #44e4ff !important; }
 </style>`;
 
     const logo = logoUrl
-        ? `<img class="fc-logo-image" src="${escapeHtml(logoUrl)}" alt="Famosa City">`
+        ? `<img class="fc-logo-image" src="${escapeHtml(logoUrl)}" alt="A Famosa City">`
         : `<div class="fc-logo-text">FAMOSA <span>CITY</span></div>`;
 
     const chrome = `
@@ -379,7 +379,7 @@ a { color: #44e4ff !important; }
     <div class="fc-brand">${logo}</div>
     <div class="fc-header-title">
         <strong>Transcript de Atendimento</strong>
-        <small>Famosa City • Suporte Oficial</small>
+        <small>A Famosa City • Suporte Oficial</small>
     </div>
 </div>
 <aside id="famosa-ticket-sidebar">
@@ -396,7 +396,7 @@ a { color: #44e4ff !important; }
 
     const footer = `
 <div id="famosa-transcript-footer">
-    <strong>Famosa City</strong> • Suporte Oficial<br>
+    <strong>A Famosa City</strong> • Suporte Oficial<br>
     Este transcript é confidencial e destinado às partes envolvidas no atendimento.
 </div>`;
 
@@ -487,7 +487,7 @@ a { color: #44e4ff !important; }
     }
 
         
-    const pageTitle = `Famosa City • Transcript #${metadata.ticketId || ''}`;
+    const pageTitle = `A Famosa City • Transcript #${metadata.ticketId || ''}`;
 
     if (html.includes('<title>')) {
         html = html.replace(
