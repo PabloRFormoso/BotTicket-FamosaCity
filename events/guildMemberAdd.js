@@ -49,6 +49,6 @@ module.exports = {
 
         const attachment = new Discord.AttachmentBuilder(await canvas.toBuffer(), { name: 'welcome.png' });
 
-        channel.send({ /* content: `Bem vindo ao Servidor ${member}`,  */ files: [attachment] });
+        channel.send({ content: `Bem vindo ao Servidor ${member}`, files: [attachment] });
     },
 };
