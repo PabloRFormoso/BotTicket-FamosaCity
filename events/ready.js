@@ -1,6 +1,6 @@
 const { Events, ActivityType } = require("discord.js");
 
-const SITE = process.env.FAMOSA_SITE || "famosacity.com.br";
+const SITE = process.env.FAMOSA_SITE || "site.famosacity.com.br";
 const INTERVAL = 40 * 1000;
 
 const CUSTOM_EMOJI = {
