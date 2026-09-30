@@ -71,7 +71,7 @@ module.exports = (client) => {
                 const ticketImage = new MediaGalleryBuilder()
                     .addItems(
                         new MediaGalleryItemBuilder()
-                            .setURL('https://i.imgur.com/oUUkzMC.gif')
+                            .setURL('https://i.imgur.com/uVarO0A.gif')
                             .setDescription('A Famosa City • Central de Atendimento')
                     );
 
